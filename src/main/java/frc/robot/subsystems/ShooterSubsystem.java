@@ -18,7 +18,7 @@ public class ShooterSubsystem {
     }
 
     public double GetSpeedInRPM(){
-        return this.talonFX.getVelocity().getValueAsDouble();
+        return this.talonFX.getVelocity().getValueAsDouble() * 60;
     }
 
     public double CalculatePID(){
