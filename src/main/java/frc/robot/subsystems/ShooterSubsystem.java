@@ -9,7 +9,7 @@ public class ShooterSubsystem {
     private final TalonFX talonFX = new TalonFX(Constants.SubsystemsConstants.ShooterSubsystemConstants.TALON_SUBSYSTEM_SHOOTER_ID);
     private final TalonFX invertedTalonFX = new TalonFX(Constants.SubsystemsConstants.ShooterSubsystemConstants.INVERTED_TALON_SUBSYSTEM_SHOTTER_ID);    
 
-    private final PIDController pid = new PIDController(Constants.SubsystemsConstants.ShooterSubsystemConstants.ShooterSubsystemPIDConstants.KP, Constants.SubsystemsConstants.ShooterSubsystemConstants.ShooterSubsystemPIDConstants.KP, Constants.SubsystemsConstants.ShooterSubsystemConstants.ShooterSubsystemPIDConstants.KP); // mhm great names very readable 👍
+    private final PIDController pid = new PIDController(Constants.SubsystemsConstants.ShooterSubsystemConstants.ShooterSubsystemPIDConstants.KP, Constants.SubsystemsConstants.ShooterSubsystemConstants.ShooterSubsystemPIDConstants.KI, Constants.SubsystemsConstants.ShooterSubsystemConstants.ShooterSubsystemPIDConstants.KD); // mhm great names very readable 👍
 
     public ShooterSubsystem(){
         this.talonFX.setInverted(false);
