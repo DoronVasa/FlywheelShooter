@@ -1,32 +1,42 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.controls.Follower;
+import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 
-import edu.wpi.first.math.controller.PIDController;
-import frc.robot.Constants;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.Subsystems.Shooter;
 
-public class ShooterSubsystem {
-    private final TalonFX talonFX = new TalonFX(Constants.SubsystemsConstants.ShooterSubsystemConstants.TALON_SUBSYSTEM_SHOOTER_ID);
-    private final TalonFX invertedTalonFX = new TalonFX(Constants.SubsystemsConstants.ShooterSubsystemConstants.INVERTED_TALON_SUBSYSTEM_SHOTTER_ID);    
+public class ShooterSubsystem extends SubsystemBase {
+    private final TalonFX leftTalonFX = new TalonFX(Shooter.LEFT_TALONFX_ID);
+    private final TalonFX rightTalonFX = new TalonFX(Shooter.RIGHT_TALON_ID);    
 
-    private final PIDController pid = new PIDController(Constants.SubsystemsConstants.ShooterSubsystemConstants.ShooterSubsystemPIDConstants.KP, Constants.SubsystemsConstants.ShooterSubsystemConstants.ShooterSubsystemPIDConstants.KI, Constants.SubsystemsConstants.ShooterSubsystemConstants.ShooterSubsystemPIDConstants.KD); // mhm great names very readable 👍
+    private VelocityVoltage velocityVoltageObj;
 
     public ShooterSubsystem(){
-        this.talonFX.setInverted(false);
-        this.invertedTalonFX.setInverted(true);
-        this.pid.setSetpoint(3000);
+        final Follower followerObj = new Follower(Shooter.RIGHT_TALON_ID, true); 
+        leftTalonFX.setControl(followerObj);
     }
 
-    public double GetSpeedInRPM(){
-        return this.talonFX.getVelocity().getValueAsDouble() * 60;
+    public void SetSetPoint(double setPoint){
+        velocityVoltageObj = new VelocityVoltage(setPoint); 
     }
 
-    public double CalculatePID(){
-        return pid.calculate(GetSpeedInRPM());
+    public void SetMotorTarget(){
+        rightTalonFX.setControl(velocityVoltageObj);
     }
 
     public void MoveMotor(double speed){
-        this.talonFX.set(speed);
-        this.invertedTalonFX.set(speed);
+        this.rightTalonFX.set(speed);
+    }
+
+    public void stopMotor(){
+        this.rightTalonFX.set(0);
+    }
+
+    @Override
+    public void periodic(){
+        SmartDashboard.putNumber("Shooter RPS", rightTalonFX.getVelocity().getValueAsDouble() + leftTalonFX.getVelocity().getValueAsDouble() / 2);
     }
 }
